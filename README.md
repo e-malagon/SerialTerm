@@ -26,29 +26,29 @@ Supported values
 
 Interactive commands, available at any time:
 
-**.open** [Port][Baud rate][Data bits][Parity][Stop bits][Handshake]
+**.open** [Port][Baud rate][Data bits][Parity][Stop bits][Handshake]\
   Open a new connection using provided values.
 
-**.close**
+**.close**\
   Close current connection.
 
-**.send** filename
+**.send** filename\
   Send a file.
 
-**.hex|.bin**
+**.hex|.bin**\
   Input/output in binary hexadecimal mode.
 
-**.asc|.text**
+**.asc|.text**\
   Input/output in ASCII mode.
 
-**.color** [received text color] [send text color]
+**.color** [received text color] [send text color]\
   Change the color of send/received text. Available colors Black, DarkBlue, DarkGreen, DarkCyan, DarkRed,
   DarkMagenta, DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White.
 
-**.exit**
+**.exit**\
   Exit from SerialTerm.
 
-**.help**
+**.help**\
   Print this help.
 
 Any contribution is welcome, also if you want some new feature don't hesitate to ask about it. 
