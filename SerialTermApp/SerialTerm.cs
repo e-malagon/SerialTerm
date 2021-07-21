@@ -230,6 +230,10 @@ namespace SerialTerm
                             current.Text = true;
                         SaveConfig();
                         break;
+                    case ".newline":
+                        lock (current)
+                            ChangeNewLine(words);
+                        break;
                     case ".color":
                         lock (current)
                             ChangeColor(words);
@@ -691,6 +695,8 @@ namespace SerialTerm
                     {
                         line = Regex.Unescape(line);
                         serialPort.Write(line);
+                        if(current.NewLineEnabled)
+                            serialPort.Write(current.NewLine);
                     }
                     catch (Exception e) { Console.WriteLine(e.Message); }
                 }
@@ -739,6 +745,39 @@ namespace SerialTerm
                 }
             }
             catch (Exception e) { Console.WriteLine(e.Message); }
+        }
+
+        public void ChangeNewLine(string[] words)
+        {
+            if (1 < words.Length)
+            {
+                switch (words[1].ToLower())
+                {
+                    case "crlf":
+                        current.NewLineEnabled = true;
+                        current.NewLine = "\r\n";
+                        break;
+                    case "cr":
+                        current.NewLineEnabled = true;
+                        current.NewLine = "\r";
+                        break;
+                    case "lf":
+                        current.NewLineEnabled = true;
+                        current.NewLine = "\n";
+                        break;
+                    case "on":
+                        current.NewLineEnabled = true;
+                        break;
+                    case "off":
+                        current.NewLineEnabled = false;
+                        break;
+                }
+            }
+            else
+            {
+                current.NewLineEnabled = !current.NewLineEnabled;
+            }
+            SaveConfig();
         }
 
         public void ChangeColor(string[] words)
@@ -855,7 +894,6 @@ namespace SerialTerm
             SaveConfig();
         }
 
-
         static public void PrintHelp()
         {
             Console.WriteLine("Simple serial port utility. Designed to be used with Windows Terminal.");
@@ -887,6 +925,9 @@ namespace SerialTerm
             Console.WriteLine("");
             Console.WriteLine(".asc|.text");
             Console.WriteLine("  Input/output in ASCII mode");
+            Console.WriteLine("");
+            Console.WriteLine(".newline [CRLF|CR|LF|ON|OFF]");
+            Console.WriteLine("  Set or toggle the new line characters to append after each entered line. Default value CR.");
             Console.WriteLine("");
             Console.WriteLine(".color [received text color] [send text color]");
             Console.WriteLine("  Change color of send/received text available colors Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow,");
@@ -937,6 +978,8 @@ namespace SerialTerm
             StopBits = "One";
             Handshake = "None";
             Text = true;
+            NewLineEnabled = false;
+            NewLine = "\n";
             Send = ConsoleColor.Gray;
             Receive = ConsoleColor.White;
         }
@@ -948,6 +991,8 @@ namespace SerialTerm
         public string StopBits { get; set; }
         public string Handshake { get; set; }
         public bool Text { get; set; }
+        public bool NewLineEnabled { get; set; }
+        public string NewLine { get; set; }
         public ConsoleColor Send { get; set; }
         public ConsoleColor Receive { get; set; }
 
